@@ -139,6 +139,7 @@
 *   pie - Pie chart. Options:
 *       sliceColors - An array of colors to use for pie slices
 *       offset - Angle in degrees to offset the first slice - Try -90 or +90
+*       minimumSize - Make sure a small slice is visible in the pie--less accurate, more usable
 *
 *   box - Box plot. Options:
 *       raw - Set to true to supply pre-computed plot points as values
@@ -896,6 +897,10 @@
                 var end = next;
                 if (total > 0) {  // avoid divide by zero
                     end = next + (circle*(values[i]/total));
+                }
+                // make sure a slice is always visible...even if it's one in a million
+                if (options.get('minimumSize') && Math.round(start) == Math.round(end) && !(start == end)) {
+                  end = end + options.get('minimumSize');
                 }
                 target.drawPieSlice(radius, radius, radius, start, end, undefined, options.get('sliceColors')[i % options.get('sliceColors').length]);
                 next = end;
